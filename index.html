@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Setup Guide - Mini Servidor IA</title>
+    
+    <!-- Link real para o manifest do GitHub Pages -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzE0YjhhNiIvPjwvc3ZnPg==">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        // Utilizando a fonte Inter conforme solicitado
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf',
+                            500: '#14b8a6', 600: '#0d9488', 700: '#0f766e',
+                            900: '#134e4a', 950: '#042f2e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        @media (prefers-color-scheme: dark) {
+            ::-webkit-scrollbar-track { background: #1e293b; }
+            ::-webkit-scrollbar-thumb { background: #475569; }
+        }
+
+        .code-block-wrapper { position: relative; }
+        .copy-btn { position: absolute; top: 0.5rem; right: 0.5rem; transition: all 0.2s; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased selection:bg-brand-500 selection:text-white overflow-hidden bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-[#e2e8f0]">
+
+    <nav class="w-full md:w-64 bg-white border-b border-slate-200 dark:bg-slate-900 md:border-b-0 md:border-r dark:border-slate-800 flex-shrink-0 z-10 md:h-screen overflow-y-auto shadow-sm">
+        <div class="p-6">
+            <h1 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <i class="ph-fill ph-hard-drives text-brand-600 dark:text-brand-400"></i>
+                DevServer
+            </h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Setup interativo (N5105)</p>
+        </div>
+
+        <div class="px-4 pb-6 flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
+            <button onclick="switchTab('intro')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" data-target="intro">
+                <i class="ph ph-info text-lg"></i> <span class="whitespace-nowrap">Visão Geral</span>
+            </button>
+            <button onclick="switchTab('base')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="base">
+                <i class="ph ph-linux-logo text-lg"></i> <span class="whitespace-nowrap">1. Sistema Base</span>
+            </button>
+            <button onclick="switchTab('docker')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="docker">
+                <i class="ph ph-docker-logo text-lg"></i> <span class="whitespace-nowrap">2. Docker & PWSH</span>
+            </button>
+            <button onclick="switchTab('ollama')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="ollama">
+                <i class="ph ph-brain text-lg"></i> <span class="whitespace-nowrap">3. Ollama (IA)</span>
+            </button>
+            <button onclick="switchTab('pocketbase')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="pocketbase">
+                <i class="ph ph-database text-lg"></i> <span class="whitespace-nowrap">4. PocketBase</span>
+            </button>
+            <button onclick="switchTab('remote')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="remote">
+                <i class="ph ph-plugs-connected text-lg"></i> <span class="whitespace-nowrap">5. Acesso Remoto</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto h-[calc(100vh-140px)] md:h-screen p-4 md:p-8 lg:p-12 relative">
+        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+        <div id="intro" class="tab-content active max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Bem-vindo ao seu Mini Servidor</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-8">Hardware: Celeron N5105 | 8GB RAM DDR4 | SSD NVMe</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-5 shadow-md dark:shadow-lg">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center mb-4">
+                        <i class="ph ph-target text-brand-600 dark:text-brand-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-slate-900 dark:text-white font-medium mb-2">O Objetivo</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Criar um ambiente de desenvolvimento limpo, performático e auto-hospedado para programar em Python, HTML (PWAs) e PowerShell, auxiliado por IA local.</p>
+                </div>
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-5 shadow-md dark:shadow-lg">
+                    <div class="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center mb-4">
+                        <i class="ph ph-architecture text-brand-600 dark:text-brand-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-slate-900 dark:text-white font-medium mb-2">A Arquitetura</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Ubuntu Server rodando serviços nativos essenciais (IA, PowerShell) e isolando serviços secundários em contêineres Docker (Bancos de dados, Apps).</p>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 text-blue-800 dark:bg-blue-950/30 dark:border-blue-900/50 dark:text-blue-200 rounded-lg p-4 flex gap-4 text-sm">
+                <i class="ph-fill ph-info text-xl flex-shrink-0 text-blue-600 dark:text-blue-400"></i>
+                <p>Navegue pelo menu lateral ou superior para ver as instruções. Todos os blocos de código possuem um botão de cópia no canto superior direito. <strong>Dica:</strong> Este PWA pode ser instalado no seu dispositivo.</p>
+            </div>
+        </div>
+
+        <div id="base" class="tab-content max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">1. Preparando o Ubuntu Server</h2>
+            <div class="space-y-6">
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Atualizar Pacotes e Repositórios</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)" title="Copiar"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo apt update && sudo apt upgrade -y</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Instalar Utilitários Básicos</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)" title="Copiar"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo apt install curl wget git nano build-essential -y</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docker" class="tab-content max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">2. Docker e PowerShell (Nativos)</h2>
+            <div class="space-y-6">
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="ph-fill ph-docker-logo text-blue-500 dark:text-blue-400 text-2xl"></i>
+                        <h3 class="text-lg font-medium text-slate-900 dark:text-white">Instalar o Docker via Script Oficial</h3>
+                    </div>
+                    <div class="code-block-wrapper mb-3">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-blue-300"><code>curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh</code></pre>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-2 mt-4">Adicione seu usuário ao grupo do Docker para evitar o 'sudo':</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo usermod -aG docker $USER</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="ph-fill ph-terminal-window text-indigo-600 dark:text-indigo-400 text-2xl"></i>
+                        <h3 class="text-lg font-medium text-slate-900 dark:text-white">Instalar o PowerShell Core</h3>
+                    </div>
+                    <div class="code-block-wrapper mb-3">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-indigo-300"><code>wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt update
+sudo apt install -y powershell</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ollama" class="tab-content max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">3. Instalando a IA Local (Ollama)</h2>
+            <div class="space-y-6">
+                <div class="relative pl-8 pb-6 border-l border-slate-300 dark:border-slate-700 ml-4">
+                    <div class="absolute w-6 h-6 bg-brand-500 rounded-full text-white text-xs flex items-center justify-center -left-[13px] top-0 ring-4 ring-slate-50 dark:ring-slate-950">1</div>
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Instalar o Motor Ollama</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 pb-6 border-l border-slate-300 dark:border-slate-700 ml-4">
+                    <div class="absolute w-6 h-6 bg-brand-500 rounded-full text-white text-xs flex items-center justify-center -left-[13px] top-0 ring-4 ring-slate-50 dark:ring-slate-950">2</div>
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Liberar Acesso Remoto</h3>
+                    <div class="code-block-wrapper mb-2">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-slate-300"><code>sudo systemctl edit ollama.service</code></pre>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-2">Cole as linhas abaixo:</p>
+                    <div class="code-block-wrapper mb-2">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-yellow-300"><code>[Service]
+Environment="OLLAMA_HOST=0.0.0.0"</code></pre>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 pb-2 ml-4">
+                    <div class="absolute w-6 h-6 bg-brand-500 rounded-full text-white text-xs flex items-center justify-center -left-[13px] top-0 ring-4 ring-slate-50 dark:ring-slate-950">3</div>
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Baixar os Modelos Otimizados</h3>
+                    <div class="code-block-wrapper mb-2">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-brand-400"><code>ollama run qwen2.5-coder:1.5b
+ollama run qwen2.5-coder:3b</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pocketbase" class="tab-content max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">4. Banco de Dados Leve (PocketBase)</h2>
+            <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">1. Crie a pasta e o arquivo de configuração:</p>
+                <div class="code-block-wrapper mb-6">
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-slate-300"><code>mkdir -p ~/docker/pocketbase/pb_data
+cd ~/docker/pocketbase
+nano docker-compose.yml</code></pre>
+                </div>
+
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">2. Cole a configuração YAML no arquivo:</p>
+                <div class="code-block-wrapper mb-6">
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-yellow-300"><code>services:
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:latest
+    container_name: pocketbase
+    restart: unless-stopped
+    command:
+      - --encryptionEnv
+      - PB_ENCRYPTION_KEY
+    environment:
+      PB_ENCRYPTION_KEY: "uma_senha_forte_aqui"
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./pb_data:/pb/pb_data</code></pre>
+                </div>
+
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">3. Suba o serviço:</p>
+                <div class="code-block-wrapper">
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>docker compose up -d</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div id="remote" class="tab-content max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">5. Acesso e Integração</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Encontrar o IP do Servidor</h3>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-3 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>ip a | grep inet</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 mt-8">Configurando o VS Code</h3>
+            <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                <div class="code-block-wrapper mt-4">
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-yellow-300"><code>"models": [
+  {
+    "title": "Qwen 2.5 (1.5b)",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:1.5b",
+    "apiBase": "http://IP_SERVIDOR:11434"
+  }
+]</code></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Registro limpo do Service Worker para o GitHub Pages
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Service Worker PWA registrado com sucesso!', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('Falha ao registrar o Service Worker:', err);
+                    });
+            });
+        }
+
+        // Lógica de abas
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.dataset.target === tabId) {
+                    btn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800');
+                    btn.classList.add('bg-brand-50', 'text-brand-700', 'dark:bg-brand-900/30', 'dark:text-brand-400');
+                } else {
+                    btn.classList.remove('bg-brand-50', 'text-brand-700', 'dark:bg-brand-900/30', 'dark:text-brand-400');
+                    btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800');
+                }
+            });
+            if(window.innerWidth < 768) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Lógica de copiar para a área de transferência
+        function copyCode(btnElement) {
+            const preElement = btnElement.nextElementSibling;
+            let codeText = preElement.innerText;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeText).then(() => showSuccessFeedback(btnElement))
+                .catch(err => fallbackCopyTextToClipboard(codeText, btnElement));
+            } else {
+                fallbackCopyTextToClipboard(codeText, btnElement);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btnElement) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                if(document.execCommand('copy')) showSuccessFeedback(btnElement);
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        }
+
+        function showSuccessFeedback(btnElement) {
+            const icon = btnElement.querySelector('i');
+            const originalClass = icon.className;
+            icon.className = 'ph ph-check text-brand-500 dark:text-brand-400';
+            btnElement.classList.add('border-brand-500/50', 'bg-brand-50', 'dark:bg-brand-900/20');
+            showToast("Código copiado!");
+            setTimeout(() => {
+                icon.className = originalClass;
+                btnElement.classList.remove('border-brand-500/50', 'bg-brand-50', 'dark:bg-brand-900/20');
+            }, 2000);
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `bg-emerald-100 border border-emerald-300 text-emerald-800 dark:bg-emerald-900/90 dark:border-emerald-500 dark:text-emerald-100 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 text-sm transform transition-all duration-300 translate-y-[-100%] opacity-0`;
+            toast.innerHTML = `<i class="ph ph-check-circle text-lg"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-[-100%]', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-10px]', 'opacity-0');
+                setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
