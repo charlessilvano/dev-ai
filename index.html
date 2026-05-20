@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Setup Guide - Mini Servidor IA</title>
     
-    <!-- Link real para o manifest do GitHub Pages -->
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzE0YjhhNiIvPjwvc3ZnPg==">
@@ -15,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script>
@@ -23,15 +23,19 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        // Utilizando a fonte Inter conforme solicitado
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Inter', 'sans-serif'],
                         mono: ['Fira Code', 'monospace'],
                     },
                     colors: {
                         brand: {
-                            50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf',
-                            500: '#14b8a6', 600: '#0d9488', 700: '#0f766e',
-                            900: '#134e4a', 950: '#042f2e',
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                            950: '#042f2e',
                         }
                     }
                 }
@@ -47,6 +51,15 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Esconder barra de rolagem na navbar mobile para visual de App */
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #e2e8f0; }
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
@@ -58,45 +71,58 @@
         }
 
         .code-block-wrapper { position: relative; }
-        .copy-btn { position: absolute; top: 0.5rem; right: 0.5rem; transition: all 0.2s; }
+        .copy-btn {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            transition: all 0.2s;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col md:flex-row antialiased selection:bg-brand-500 selection:text-white overflow-hidden bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-[#e2e8f0]">
+<body class="h-[100dvh] flex flex-col md:flex-row antialiased selection:bg-brand-500 selection:text-white overflow-hidden bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-[#e2e8f0]">
 
-    <nav class="w-full md:w-64 bg-white border-b border-slate-200 dark:bg-slate-900 md:border-b-0 md:border-r dark:border-slate-800 flex-shrink-0 z-10 md:h-screen overflow-y-auto shadow-sm">
-        <div class="p-6">
-            <h1 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i class="ph-fill ph-hard-drives text-brand-600 dark:text-brand-400"></i>
-                DevServer
-            </h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Setup interativo (N5105)</p>
+    <!-- Sidebar -->
+    <nav class="w-full md:w-64 bg-white border-b border-slate-200 dark:bg-slate-900 md:border-b-0 md:border-r dark:border-slate-800 flex-shrink-0 z-10 md:h-[100dvh] overflow-y-auto shadow-sm">
+        <div class="p-4 md:p-6 pb-2 md:pb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="ph-fill ph-hard-drives text-brand-600 dark:text-brand-400"></i>
+                    DevServer
+                </h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 hidden md:block">Setup interativo (N5105)</p>
+            </div>
         </div>
 
-        <div class="px-4 pb-6 flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
-            <button onclick="switchTab('intro')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" data-target="intro">
+        <div class="px-4 pb-4 md:pb-6 flex md:flex-col gap-2 overflow-x-auto hide-scroll snap-x snap-mandatory">
+            <button onclick="switchTab('intro')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" data-target="intro">
                 <i class="ph ph-info text-lg"></i> <span class="whitespace-nowrap">Visão Geral</span>
             </button>
-            <button onclick="switchTab('base')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="base">
+            <button onclick="switchTab('base')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="base">
                 <i class="ph ph-linux-logo text-lg"></i> <span class="whitespace-nowrap">1. Sistema Base</span>
             </button>
-            <button onclick="switchTab('docker')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="docker">
+            <button onclick="switchTab('docker')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="docker">
                 <i class="ph ph-docker-logo text-lg"></i> <span class="whitespace-nowrap">2. Docker & PWSH</span>
             </button>
-            <button onclick="switchTab('ollama')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="ollama">
+            <button onclick="switchTab('ollama')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="ollama">
                 <i class="ph ph-brain text-lg"></i> <span class="whitespace-nowrap">3. Ollama (IA)</span>
             </button>
-            <button onclick="switchTab('pocketbase')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="pocketbase">
+            <button onclick="switchTab('pocketbase')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="pocketbase">
                 <i class="ph ph-database text-lg"></i> <span class="whitespace-nowrap">4. PocketBase</span>
             </button>
-            <button onclick="switchTab('remote')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="remote">
+            <button onclick="switchTab('remote')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800" data-target="remote">
                 <i class="ph ph-plugs-connected text-lg"></i> <span class="whitespace-nowrap">5. Acesso Remoto</span>
+            </button>
+            <button onclick="switchTab('tarefas')" class="nav-btn flex-shrink-0 md:w-full snap-start flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 border md:border-0 border-brand-200 dark:border-brand-800 md:mt-4" data-target="tarefas">
+                <i class="ph ph-list-checks text-lg text-brand-500"></i> <span class="whitespace-nowrap font-bold text-brand-600 dark:text-brand-400">Progresso</span>
             </button>
         </div>
     </nav>
 
-    <main class="flex-1 overflow-y-auto h-[calc(100vh-140px)] md:h-screen p-4 md:p-8 lg:p-12 relative">
-        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+    <!-- Main Content -->
+    <main class="flex-1 w-full overflow-y-auto p-4 md:p-8 lg:p-12 relative pb-24 md:pb-12">
+        
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
+        <!-- Tab: Intro -->
         <div id="intro" class="tab-content active max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Bem-vindo ao seu Mini Servidor</h2>
             <p class="text-slate-600 dark:text-slate-400 mb-8">Hardware: Celeron N5105 | 8GB RAM DDR4 | SSD NVMe</p>
@@ -124,108 +150,168 @@
             </div>
         </div>
 
+        <!-- Tab: Base System -->
         <div id="base" class="tab-content max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">1. Preparando o Ubuntu Server</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">O primeiro passo após instalar o Ubuntu Server limpo é garantir que o sistema está atualizado e possui as ferramentas básicas para compilação e download.</p>
+            
             <div class="space-y-6">
                 <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
                     <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Atualizar Pacotes e Repositórios</h3>
                     <div class="code-block-wrapper">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)" title="Copiar"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)" title="Copiar">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo apt update && sudo apt upgrade -y</code></pre>
                     </div>
                 </div>
 
                 <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
                     <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Instalar Utilitários Básicos</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Ferramentas como curl, wget e git são essenciais para os próximos passos.</p>
                     <div class="code-block-wrapper">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)" title="Copiar"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)" title="Copiar">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo apt install curl wget git nano build-essential -y</code></pre>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Tab: Docker & PowerShell -->
         <div id="docker" class="tab-content max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">2. Docker e PowerShell (Nativos)</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">Instalando os motores fundamentais de infraestrutura e automação diretamente no sistema operacional.</p>
+            
             <div class="space-y-6">
+                <!-- Docker -->
                 <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
                     <div class="flex items-center gap-3 mb-4">
                         <i class="ph-fill ph-docker-logo text-blue-500 dark:text-blue-400 text-2xl"></i>
                         <h3 class="text-lg font-medium text-slate-900 dark:text-white">Instalar o Docker via Script Oficial</h3>
                     </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">O método mais limpo para garantir a versão atualizada do Docker.</p>
                     <div class="code-block-wrapper mb-3">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-blue-300"><code>curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh</code></pre>
                     </div>
                     <p class="text-sm text-slate-600 dark:text-slate-400 mb-2 mt-4">Adicione seu usuário ao grupo do Docker para evitar o 'sudo':</p>
                     <div class="code-block-wrapper">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
-                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo usermod -aG docker $USER</code></pre>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>sudo usermod -aG docker $USER
+# Obs: É necessário sair (exit) e entrar novamente (SSH) para aplicar.</code></pre>
                     </div>
                 </div>
 
+                <!-- PowerShell -->
                 <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
                     <div class="flex items-center gap-3 mb-4">
                         <i class="ph-fill ph-terminal-window text-indigo-600 dark:text-indigo-400 text-2xl"></i>
                         <h3 class="text-lg font-medium text-slate-900 dark:text-white">Instalar o PowerShell Core</h3>
                     </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">A instalação nativa via repositório da Microsoft garante integração perfeita no Ubuntu.</p>
                     <div class="code-block-wrapper mb-3">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
-                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-indigo-300"><code>wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-indigo-300"><code># Baixa as chaves do repositório da Microsoft
+wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
 sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
+
+# Instala o PowerShell
 sudo apt install -y powershell</code></pre>
                     </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-2">Para testar, digite <code class="bg-slate-200 text-indigo-700 dark:bg-slate-800 px-1 py-0.5 rounded dark:text-indigo-300">pwsh</code> no terminal.</p>
                 </div>
             </div>
         </div>
 
+        <!-- Tab: Ollama -->
         <div id="ollama" class="tab-content max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">3. Instalando a IA Local (Ollama)</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">Configuração do motor de inferência que irá rodar direto na CPU. A instalação será nativa para máxima performance.</p>
+            
             <div class="space-y-6">
+                <!-- Step 1 -->
                 <div class="relative pl-8 pb-6 border-l border-slate-300 dark:border-slate-700 ml-4">
                     <div class="absolute w-6 h-6 bg-brand-500 rounded-full text-white text-xs flex items-center justify-center -left-[13px] top-0 ring-4 ring-slate-50 dark:ring-slate-950">1</div>
                     <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Instalar o Motor Ollama</h3>
                     <div class="code-block-wrapper">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
                     </div>
                 </div>
 
+                <!-- Step 2 -->
                 <div class="relative pl-8 pb-6 border-l border-slate-300 dark:border-slate-700 ml-4">
                     <div class="absolute w-6 h-6 bg-brand-500 rounded-full text-white text-xs flex items-center justify-center -left-[13px] top-0 ring-4 ring-slate-50 dark:ring-slate-950">2</div>
-                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Liberar Acesso Remoto</h3>
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Liberar Acesso Remoto (Crucial)</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Para que o seu VS Code (no seu PC) se conecte ao Ollama, precisamos liberar a porta na rede.</p>
                     <div class="code-block-wrapper mb-2">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-slate-300"><code>sudo systemctl edit ollama.service</code></pre>
                     </div>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-2">Cole as linhas abaixo:</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-2">No editor que abrir, cole as linhas abaixo:</p>
                     <div class="code-block-wrapper mb-2">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-yellow-300"><code>[Service]
 Environment="OLLAMA_HOST=0.0.0.0"</code></pre>
                     </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-2 mt-3">Salve (Ctrl+O, Enter, Ctrl+X) e reinicie o serviço:</p>
+                    <div class="code-block-wrapper">
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
+                        <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-slate-300"><code>sudo systemctl daemon-reload
+sudo systemctl restart ollama</code></pre>
+                    </div>
                 </div>
 
+                <!-- Step 3 -->
                 <div class="relative pl-8 pb-2 ml-4">
                     <div class="absolute w-6 h-6 bg-brand-500 rounded-full text-white text-xs flex items-center justify-center -left-[13px] top-0 ring-4 ring-slate-50 dark:ring-slate-950">3</div>
                     <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Baixar os Modelos Otimizados</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Execute estes comandos para baixar os modelos adequados para os 8GB de RAM.</p>
                     <div class="code-block-wrapper mb-2">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-brand-400"><code>ollama run qwen2.5-coder:1.5b
-ollama run qwen2.5-coder:3b</code></pre>
+# Após baixar, digite /bye
+
+ollama run qwen2.5-coder:3b
+# Digite /bye para sair após o download</code></pre>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Tab: PocketBase -->
         <div id="pocketbase" class="tab-content max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">4. Banco de Dados Leve (PocketBase)</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">Usando Docker Compose para subir o banco de dados que consumirá apenas ~40MB de RAM.</p>
+
             <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Criar o Contêiner Docker</h3>
+                
                 <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">1. Crie a pasta e o arquivo de configuração:</p>
                 <div class="code-block-wrapper mb-6">
-                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                        <i class="ph ph-copy"></i>
+                    </button>
                     <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-slate-300"><code>mkdir -p ~/docker/pocketbase/pb_data
 cd ~/docker/pocketbase
 nano docker-compose.yml</code></pre>
@@ -233,7 +319,9 @@ nano docker-compose.yml</code></pre>
 
                 <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">2. Cole a configuração YAML no arquivo:</p>
                 <div class="code-block-wrapper mb-6">
-                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                        <i class="ph ph-copy"></i>
+                    </button>
                     <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-yellow-300"><code>services:
   pocketbase:
     image: ghcr.io/muchobien/pocketbase:latest
@@ -250,30 +338,53 @@ nano docker-compose.yml</code></pre>
       - ./pb_data:/pb/pb_data</code></pre>
                 </div>
 
-                <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">3. Suba o serviço:</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">3. Suba o serviço em segundo plano:</p>
                 <div class="code-block-wrapper">
-                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                        <i class="ph ph-copy"></i>
+                    </button>
                     <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>docker compose up -d</code></pre>
                 </div>
             </div>
         </div>
 
+        <!-- Tab: Remote Access -->
         <div id="remote" class="tab-content max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">5. Acesso e Integração</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">Como juntar tudo e conectar o seu computador principal aos serviços do Mini Servidor.</p>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
                     <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Encontrar o IP do Servidor</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">No terminal do servidor Ubuntu:</p>
                     <div class="code-block-wrapper">
-                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                        <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                            <i class="ph ph-copy"></i>
+                        </button>
                         <pre class="bg-slate-800 dark:bg-slate-950 p-3 rounded-lg overflow-x-auto text-sm font-mono text-emerald-400"><code>ip a | grep inet</code></pre>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Painel do PocketBase</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">No navegador do seu PC principal:</p>
+                    <div class="bg-slate-800 dark:bg-slate-950 p-3 rounded-lg text-sm font-mono text-blue-300">
+                        http://[IP_SERVIDOR]:8090/_/
                     </div>
                 </div>
             </div>
 
             <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 mt-8">Configurando o VS Code</h3>
             <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                <ol class="list-decimal list-inside space-y-4 text-slate-600 dark:text-slate-300 text-sm">
+                    <li>No seu PC principal, instale a extensão <strong>Continue.dev</strong>.</li>
+                    <li>Abra o arquivo <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-indigo-600 dark:text-emerald-300 font-mono">config.json</code> da extensão.</li>
+                    <li>Adicione a configuração:</li>
+                </ol>
                 <div class="code-block-wrapper mt-4">
-                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)"><i class="ph ph-copy"></i></button>
+                    <button class="copy-btn bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white p-2 rounded-md" onclick="copyCode(this)">
+                        <i class="ph ph-copy"></i>
+                    </button>
                     <pre class="bg-slate-800 dark:bg-slate-950 p-4 rounded-lg overflow-x-auto text-sm font-mono text-yellow-300"><code>"models": [
   {
     "title": "Qwen 2.5 (1.5b)",
@@ -284,47 +395,108 @@ nano docker-compose.yml</code></pre>
 ]</code></pre>
                 </div>
             </div>
+            
+            <div class="mt-8 p-6 bg-brand-50 border border-brand-200 dark:bg-brand-900/20 dark:border-brand-500/30 rounded-xl flex gap-4 items-start">
+                <div class="w-12 h-12 bg-brand-100 dark:bg-brand-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="ph-fill ph-check-circle text-brand-600 dark:text-brand-400 text-2xl"></i>
+                </div>
+                <div>
+                    <h4 class="text-slate-900 dark:text-white font-medium text-lg">Tudo Pronto!</h4>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">O seu Celeron N5105 atua no fundo da rede processando a IA e os bancos de dados localmente e com eficiência.</p>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Tab: Tarefas & Progresso -->
+        <div id="tarefas" class="tab-content max-w-3xl mx-auto">
+            <div class="flex justify-between items-end mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Acompanhamento do Setup</h2>
+                    <p class="text-slate-600 dark:text-slate-400">Marque as etapas conforme avança. O tempo é registrado automaticamente.</p>
+                </div>
+                <button onclick="resetProgress()" class="text-xs text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 px-3 py-2 rounded transition-colors flex items-center gap-1">
+                    <i class="ph ph-trash"></i> Reiniciar
+                </button>
+            </div>
+
+            <div id="setup-start-container" class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-8 shadow-sm text-center mb-8">
+                <i class="ph-fill ph-stopwatch text-4xl text-brand-500 mb-4 inline-block"></i>
+                <h3 class="text-xl font-medium text-slate-900 dark:text-white mb-2">Iniciar o Cronômetro</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Comece a contar o tempo antes de realizar a primeira tarefa no servidor.</p>
+                <button onclick="startSetupTimer()" class="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-md shadow-brand-500/20">
+                    Iniciar Instalação
+                </button>
+            </div>
+
+            <div id="tasks-container" class="hidden space-y-8">
+                <!-- Checklist -->
+                <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 dark:bg-slate-800/50 dark:border-slate-800 flex justify-between items-center">
+                        <h3 class="font-medium text-slate-900 dark:text-white">Lista de Tarefas</h3>
+                        <span id="start-time-label" class="text-xs text-slate-500 dark:text-slate-400 font-mono"></span>
+                    </div>
+                    <ul id="task-list" class="divide-y divide-slate-100 dark:divide-slate-800/50">
+                        <!-- Tarefas geradas via JS -->
+                    </ul>
+                </div>
+
+                <!-- Gráfico de Gantt -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Timeline de Execução (Gantt)</h3>
+                    <div class="bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 rounded-xl p-6 shadow-sm overflow-x-auto">
+                        <div id="gantt-chart" class="min-w-[600px]">
+                            <!-- Gráfico gerado via JS -->
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400 mt-2 font-mono" id="gantt-labels">
+                            <span>Início</span>
+                            <span>Tempo Decorrido</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
-        // Registro limpo do Service Worker para o GitHub Pages
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('Service Worker PWA registrado com sucesso!', registration.scope);
-                    })
-                    .catch(err => {
-                        console.log('Falha ao registrar o Service Worker:', err);
-                    });
-            });
-        }
-
-        // Lógica de abas
+        // Tab switching logic
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
             document.getElementById(tabId).classList.add('active');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 if(btn.dataset.target === tabId) {
-                    btn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800');
+                    btn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800', 'border-brand-200', 'dark:border-brand-800');
                     btn.classList.add('bg-brand-50', 'text-brand-700', 'dark:bg-brand-900/30', 'dark:text-brand-400');
                 } else {
                     btn.classList.remove('bg-brand-50', 'text-brand-700', 'dark:bg-brand-900/30', 'dark:text-brand-400');
-                    btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800');
+                    if (btn.dataset.target === 'tarefas') {
+                        btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800', 'border-brand-200', 'dark:border-brand-800');
+                    } else {
+                        btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100', 'dark:text-slate-400', 'dark:hover:text-white', 'dark:hover:bg-slate-800');
+                    }
                 }
             });
-            if(window.innerWidth < 768) window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if(window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
-        // Lógica de copiar para a área de transferência
+        // Função de cópia robusta
         function copyCode(btnElement) {
             const preElement = btnElement.nextElementSibling;
             let codeText = preElement.innerText;
+            
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(codeText).then(() => showSuccessFeedback(btnElement))
-                .catch(err => fallbackCopyTextToClipboard(codeText, btnElement));
+                navigator.clipboard.writeText(codeText).then(() => {
+                    showSuccessFeedback(btnElement);
+                }).catch(err => {
+                    fallbackCopyTextToClipboard(codeText, btnElement);
+                });
             } else {
                 fallbackCopyTextToClipboard(codeText, btnElement);
             }
@@ -333,21 +505,31 @@ nano docker-compose.yml</code></pre>
         function fallbackCopyTextToClipboard(text, btnElement) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
             textArea.style.position = "fixed";
             document.body.appendChild(textArea);
+            textArea.focus();
             textArea.select();
+
             try {
-                if(document.execCommand('copy')) showSuccessFeedback(btnElement);
-            } catch (err) {}
+                const successful = document.execCommand('copy');
+                if(successful) showSuccessFeedback(btnElement);
+            } catch (err) {
+                console.error('Erro ao copiar', err);
+            }
             document.body.removeChild(textArea);
         }
 
         function showSuccessFeedback(btnElement) {
             const icon = btnElement.querySelector('i');
             const originalClass = icon.className;
+            
             icon.className = 'ph ph-check text-brand-500 dark:text-brand-400';
             btnElement.classList.add('border-brand-500/50', 'bg-brand-50', 'dark:bg-brand-900/20');
+            
             showToast("Código copiado!");
+
             setTimeout(() => {
                 icon.className = originalClass;
                 btnElement.classList.remove('border-brand-500/50', 'bg-brand-50', 'dark:bg-brand-900/20');
@@ -357,15 +539,195 @@ nano docker-compose.yml</code></pre>
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
+            
             toast.className = `bg-emerald-100 border border-emerald-300 text-emerald-800 dark:bg-emerald-900/90 dark:border-emerald-500 dark:text-emerald-100 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 text-sm transform transition-all duration-300 translate-y-[-100%] opacity-0`;
             toast.innerHTML = `<i class="ph ph-check-circle text-lg"></i> <span>${message}</span>`;
+            
             container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-[-100%]', 'opacity-0'), 10);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-[-100%]', 'opacity-0');
+            }, 10);
+
             setTimeout(() => {
                 toast.classList.add('translate-y-[-10px]', 'opacity-0');
-                setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 300);
+                setTimeout(() => {
+                    if (container.contains(toast)) container.removeChild(toast);
+                }, 300);
             }, 3000);
         }
+
+        // --- SISTEMA DE TAREFAS E GANTT ---
+        const taskDefs = [
+            { id: 't1', title: 'Atualizar Ubuntu Server (apt update)' },
+            { id: 't2', title: 'Instalar Utilitários Básicos' },
+            { id: 't3', title: 'Instalar e Configurar Docker' },
+            { id: 't4', title: 'Instalar PowerShell Core' },
+            { id: 't5', title: 'Instalar Motor Ollama' },
+            { id: 't6', title: 'Liberar Porta do Ollama' },
+            { id: 't7', title: 'Baixar Modelos Quantizados (1.5b / 3b)' },
+            { id: 't8', title: 'Subir Banco PocketBase via Docker' },
+            { id: 't9', title: 'Configurar Extensão VS Code' }
+        ];
+
+        let setupData = { startTime: null, tasks: {} };
+
+        function initTasks() {
+            const saved = localStorage.getItem('devserver_setup');
+            if (saved) setupData = JSON.parse(saved);
+            renderTasksUI();
+        }
+
+        function startSetupTimer() {
+            setupData.startTime = Date.now();
+            saveData();
+            renderTasksUI();
+            showToast("Cronômetro iniciado! Bom trabalho.");
+        }
+
+        function resetProgress() {
+            if(confirm("Tem certeza que deseja apagar todo o progresso e o gráfico de tempo?")) {
+                setupData = { startTime: null, tasks: {} };
+                saveData();
+                renderTasksUI();
+            }
+        }
+
+        function toggleTask(id) {
+            if (!setupData.startTime) return;
+            
+            if (setupData.tasks[id]) {
+                delete setupData.tasks[id]; // Desmarcar
+            } else {
+                setupData.tasks[id] = Date.now(); // Marcar
+            }
+            saveData();
+            renderTasksUI();
+        }
+
+        function saveData() {
+            localStorage.setItem('devserver_setup', JSON.stringify(setupData));
+        }
+
+        function formatDate(ms) {
+            return new Date(ms).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function formatDuration(ms) {
+            const minutes = Math.floor(ms / 60000);
+            const seconds = ((ms % 60000) / 1000).toFixed(0);
+            return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+        }
+
+        function renderTasksUI() {
+            const startContainer = document.getElementById('setup-start-container');
+            const tasksContainer = document.getElementById('tasks-container');
+            const listEl = document.getElementById('task-list');
+            
+            if (!setupData.startTime) {
+                startContainer.classList.remove('hidden');
+                tasksContainer.classList.add('hidden');
+                return;
+            }
+
+            startContainer.classList.add('hidden');
+            tasksContainer.classList.remove('hidden');
+            
+            document.getElementById('start-time-label').innerText = `Início: ${formatDate(setupData.startTime)}`;
+
+            // Renderizar Lista
+            listEl.innerHTML = '';
+            taskDefs.forEach(task => {
+                const isDone = !!setupData.tasks[task.id];
+                const timeDone = isDone ? formatDate(setupData.tasks[task.id]) : '';
+                
+                const li = document.createElement('li');
+                li.className = `p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer ${isDone ? 'bg-emerald-50/30 dark:bg-emerald-900/10' : ''}`;
+                li.onclick = () => toggleTask(task.id);
+                
+                li.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-5 h-5 rounded border flex items-center justify-center transition-colors ${isDone ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 dark:bg-slate-800'}">
+                            ${isDone ? '<i class="ph ph-check text-sm"></i>' : ''}
+                        </div>
+                        <span class="${isDone ? 'text-slate-500 dark:text-slate-400 line-through' : 'text-slate-700 dark:text-slate-200'} font-medium text-sm transition-all">${task.title}</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">${timeDone}</span>
+                `;
+                listEl.appendChild(li);
+            });
+
+            renderGanttChart();
+        }
+
+        function renderGanttChart() {
+            const ganttEl = document.getElementById('gantt-chart');
+            ganttEl.innerHTML = '';
+            
+            const doneTasks = taskDefs
+                .filter(t => setupData.tasks[t.id])
+                .map(t => ({ id: t.id, title: t.title, time: setupData.tasks[t.id] }))
+                .sort((a, b) => a.time - b.time); // Ordenar cronologicamente
+
+            if (doneTasks.length === 0) {
+                ganttEl.innerHTML = '<div class="text-center text-sm text-slate-500 py-6">Complete a primeira tarefa para gerar o gráfico.</div>';
+                document.getElementById('gantt-labels').innerHTML = '';
+                return;
+            }
+
+            const globalStart = setupData.startTime;
+            let globalEnd = doneTasks[doneTasks.length - 1].time;
+            if (globalEnd - globalStart < 60000) globalEnd = globalStart + 60000; 
+            const totalMs = globalEnd - globalStart;
+
+            document.getElementById('gantt-labels').innerHTML = `
+                <span>${formatDate(globalStart)}</span>
+                <span>Duração Total: ${formatDuration(totalMs)}</span>
+            `;
+
+            let previousEndTime = globalStart;
+
+            doneTasks.forEach((task, index) => {
+                const taskStart = previousEndTime;
+                const taskEnd = task.time;
+                
+                let leftPercent = ((taskStart - globalStart) / totalMs) * 100;
+                let widthPercent = ((taskEnd - taskStart) / totalMs) * 100;
+                
+                if (widthPercent < 2) widthPercent = 2;
+
+                const colors = ['bg-brand-500', 'bg-blue-500', 'bg-indigo-500', 'bg-emerald-500'];
+                const barColor = colors[index % colors.length];
+
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-4 mb-3 group';
+                row.innerHTML = `
+                    <div class="w-48 flex-shrink-0 text-xs font-medium text-slate-600 dark:text-slate-400 truncate" title="${task.title}">
+                        ${task.title}
+                    </div>
+                    <div class="flex-1 h-6 bg-slate-100 dark:bg-slate-800 rounded relative">
+                        <div class="absolute h-full rounded shadow-sm flex items-center px-2 text-[10px] text-white font-mono opacity-80 group-hover:opacity-100 transition-opacity ${barColor}" 
+                             style="left: ${leftPercent}%; width: ${widthPercent}%;">
+                             ${formatDuration(taskEnd - taskStart)}
+                        </div>
+                    </div>
+                `;
+                ganttEl.appendChild(row);
+
+                previousEndTime = taskEnd;
+            });
+        }
+
+        // Inicializar tarefas após o DOM carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            initTasks();
+            
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log('PWA Service Worker Ativado'))
+                    .catch(err => console.error('PWA Erro:', err));
+            }
+        });
     </script>
 </body>
 </html>
